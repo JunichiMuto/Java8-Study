@@ -2,7 +2,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.StringTokenizer;
-import java.util.regex.Pattern;
 
 public class StringSplitAndReverse {
 
@@ -10,13 +9,25 @@ public class StringSplitAndReverse {
 
 		String s = "あおいうふぇ abc.lxu,fewag'ow$fowajfw#fg-あfaoi~oijgr|freagj!foajg |afewag,/$aaa";
 
+		/*
+		 * 文字列を区切り文字も含んで分割する
+		 */
 //		splitTokenizer(s, "|").stream()
 //			.forEach(System.out::println);
 
 //		splitRegExp(s, " \\.,'#,!/\\|\\$~-").stream()
 //			.forEach(System.out::println);
 
-		splitRegExp2(s).stream()
+		List<String> result = splitRegExp2(s);
+
+		/*
+		 * リストを逆順にする
+		 */
+		//Collections#reverseを使う
+//		Collections.reverse(result);
+
+		//Stream#sortedを使う
+		result.stream()
 			.sorted((a,b) -> -1)
 			.forEach(System.out::println);
 	}
@@ -50,12 +61,15 @@ public class StringSplitAndReverse {
 		//https://abicky.net/2010/05/30/135112/
 		//(?=X)肯定後読み
 		//(?=X)肯定先読み
-		Pattern p = Pattern.compile("((?<=[" + delim + "])|(?=[" + delim + "]))");
-		String[] strs = p.split(str);
-
+		String[] strs = str.split("((?<=[" + delim + "])|(?=[" + delim + "]))");
 		return Arrays.asList(strs);
 	}
 
+	/**
+	 * 境界正規表現エンジンで分割。
+	 * @param str
+	 * @return
+	 */
 	public static List<String> splitRegExp2(String str){
 
 		String[] strs = str.split("\\b");
