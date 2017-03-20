@@ -28,6 +28,7 @@ public class StringSplitAndReverse {
 
 		//Stream#sortedを使う
 		result.stream()
+			//Comparatorに常に-1を返すと逆順に
 			.sorted((a,b) -> -1)
 			.forEach(System.out::println);
 	}
