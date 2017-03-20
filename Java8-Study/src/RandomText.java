@@ -9,9 +9,12 @@ import java.util.stream.IntStream;
 
 public class RandomText {
 
+	/**
+	 * 引数を3つ取るPredicate
+	 */
 	@FunctionalInterface
 	public static interface IntTernaryPredicate{
-		boolean is(int a, int b, int c);
+		boolean test(int a, int b, int c);
 	}
 
 	public static String randomText(int words, int lower, int upper, List<String> delimiters){
@@ -23,13 +26,13 @@ public class RandomText {
 		//0x20はスペース、21～2Fは記号
 //		IntPredicate symbol = i -> withinRange.is(i, 0x20, 0x2f);
 		//alphabetと数字 0x5cはバックスラッシュなので除く
-		IntPredicate alnum = i -> withinRange.is(i, 0x30, 0x7e)  && i != 0x5c;
+		IntPredicate alnum = i -> withinRange.test(i, 0x30, 0x7e)  && i != 0x5c;
 		//ひらがな
-		IntPredicate hiragana = i -> withinRange.is(i, 0x3041, 0x3094);
+		IntPredicate hiragana = i -> withinRange.test(i, 0x3041, 0x3094);
 		//カタカナ
-		IntPredicate katakana = i -> withinRange.is(i, 0x30a1, 0x30f4);
+		IntPredicate katakana = i -> withinRange.test(i, 0x30a1, 0x30f4);
 		//半角カナ
-		IntPredicate hkana = i -> withinRange.is(i, 0xff66, 0xff9f);
+		IntPredicate hkana = i -> withinRange.test(i, 0xff66, 0xff9f);
 
 		//連結して1つのIntPredicateを得る
 		IntPredicate acceptLetter = alnum.or(hiragana).or(katakana).or(hkana);
