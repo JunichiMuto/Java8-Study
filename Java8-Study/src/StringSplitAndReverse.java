@@ -2,12 +2,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.stream.Stream;
 
 public class StringSplitAndReverse {
 
 	public static void main(String[] args) {
 
-		String s = "あおいうふぇ abc.lxu,fewag'ow$fowajfw#fg-あfaoi~oijgr|freagj!foajg |afewag,/$aaa";
+		String s = "あおいうふぇ abc.lxu,|fewag'ow$fowajfw#fg-あfaoi~~|oijgr|freagj!foajg |afewag,/$aaa";
 
 		/*
 		 * 文字列を区切り文字も含んで分割する
@@ -17,17 +18,20 @@ public class StringSplitAndReverse {
 //			.forEach(System.out::println);
 
 		//正規表現の肯定先読み・肯定後読みで分割
-//		splitRegExp(s, " \\.,'#,!/\\|\\$~-").stream()
-//			.forEach(System.out::println);
+		List<String> result = splitRegExp2(s, " \\.,'#,!/\\|\\$~-");
 
 		//正規表現の単語境界で分割
-		List<String> result = splitRegExp2(s);
+//		List<String> result = splitRegExp2(s);
 
 		/*
 		 * リストを逆順にする
 		 */
 		//Collections#reverseを使う
 //		Collections.reverse(result);
+
+		Stream.of("あ","い","う","え","お")
+		.sorted((a,b) -> -1)
+		.forEach(System.out::println);
 
 		//Stream#sortedを使う
 		result.stream()
@@ -74,15 +78,26 @@ public class StringSplitAndReverse {
 		return Arrays.asList(strs);
 	}
 
+	public static List<String> splitRegExp2(String str, String delim){
+
+		//(?<=X)肯定後読み・・・直前にXがある位置にマッチする
+		//(?=X)肯定先読み・・・直後にXがある位置にマッチする
+		String[] strs = str.split("(?<=[" + delim + "])(?![" + delim + "])|(?<![" + delim + "])(?=[" + delim + "])");
+
+		//文字クラスを使えば複数の区切り文字が使える
+		//・・・が連続した場合それぞれ1文字で分割してしまう
+		return Arrays.asList(strs);
+	}
+
 	/**
 	 * 境界正規表現エンジンで分割。
 	 * @param str
 	 * @return
 	 */
-	public static List<String> splitRegExp2(String str){
+	public static List<String> splitRegExpBound(String str){
 
 		//\b→単語境界にマッチする
-		String[] strs = str.split("\\b");
+		String[] strs = str.split("\\b+");
 		return Arrays.asList(strs);
 	}
 }
